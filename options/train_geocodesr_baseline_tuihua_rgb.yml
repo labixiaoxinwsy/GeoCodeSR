@@ -1,0 +1,82 @@
+name: geocodesr_rebuilt_backbone_baseline_tuihua_rgb
+manual_seed: 42
+num_gpu: 1
+
+datasets:
+  train: &train_dataset
+    type: GFPairedSemanticDataset
+    dataroot_gt: E:/GeoCodeSR/tuihua_paired_x4/train/HR
+    dataroot_lq: E:/GeoCodeSR/tuihua_paired_x4/train/LR_x4
+    dataroot_semantic: E:/GeoCodeSR/tuihua_paired_x4/train/SatMAE_tokens_mean
+    scale: 4
+    bands: 3
+    use_residual: false
+    normalize_mode: auto
+    batch_size: 2
+    num_workers: 0
+    shuffle: true
+    drop_last: true
+  val:
+    <<: *train_dataset
+    dataroot_gt: E:/GeoCodeSR/tuihua_paired_x4/val/HR
+    dataroot_lq: E:/GeoCodeSR/tuihua_paired_x4/val/LR_x4
+    dataroot_semantic: E:/GeoCodeSR/tuihua_paired_x4/val/SatMAE_tokens_mean
+    batch_size: 1
+    shuffle: false
+    drop_last: false
+
+network:
+  type: GFSemanticFrequencyExpertSRNet
+  backbone_ckpt: experiments/pretrained_models/quantexsr_net_g_best.pth
+  residual_vq_ckpt: ~
+  in_channels: 3
+  out_channels: 3
+  scale: 4
+  gt_resolution: 256
+  token_dim: 1024
+  use_original_backbone: true
+  use_semantic_codebook: false
+  use_dynamic_kernel: false
+  use_frequency_experts: false
+  lambda_code_init: 0.1
+  lambda_freq_init: 0.01
+  freeze_backbone: false
+  return_dict: true
+
+ablation:
+  baseline_only: true
+  disable_semantic: true
+  disable_codebook: true
+  disable_dynamic_kernel: true
+  disable_frequency_experts: true
+
+train:
+  total_iter: 30000
+  lr: !!float 1e-4
+  backbone_lr_mult: 1.0
+  weight_decay: 0.0
+  amp: true
+  reconstruction_weight: 1.0
+  perceptual_weight: 0.0
+  style_weight: 0.0
+  codebook_weight: 0.0
+  fft_weight: 0.0
+  sam_weight: 0.0
+  frequency_weight: 0.0
+  frequency_supervision_enabled: false
+  frequency_low_weight: 1.0
+  frequency_mid_weight: 1.0
+  frequency_high_weight: 1.0
+  balance_weight: 0.0
+  kernel_entropy_weight: 0.0
+  kernel_entropy_floor: 1.0
+  kernel_smoothness_weight: 0.0
+  print_freq: 20
+  val_freq: 1000
+  save_checkpoint_freq: 2000
+  save_preview_freq: 1000
+
+path:
+  pretrain_full: ~
+  legacy_enhancement: ~
+  experiments_root: experiments/geocodesr_rebuilt_baseline_tuihua_rgb

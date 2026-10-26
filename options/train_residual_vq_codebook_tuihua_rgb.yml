@@ -1,0 +1,46 @@
+name: residual_vq_codebook_tuihua_rgb
+manual_seed: 42
+num_gpu: 1
+
+datasets:
+  train:
+    type: GFResidualCodebookDataset
+    dataroot_residual: E:/GeoCodeSR/tuihua_paired_x4/train/Residual_x4
+    bands: 3
+    residual_scale: 20.0
+    batch_size: 8
+    num_workers: 0
+    shuffle: true
+  val:
+    type: GFResidualCodebookDataset
+    dataroot_residual: E:/GeoCodeSR/tuihua_paired_x4/val/Residual_x4
+    bands: 3
+    residual_scale: 20.0
+    batch_size: 4
+    num_workers: 0
+    shuffle: false
+    drop_last: false
+
+network:
+  in_channels: 3
+  out_channels: 3
+  base_channels: 64
+  embed_dim: 64
+  codebook_size: 512
+  commitment_weight: 0.25
+
+train:
+  total_iter: 30000
+  lr: !!float 2e-4
+  weight_decay: 0.0
+  l1_weight: 1.0
+  l2_weight: 0.0
+  fft_weight: 0.05
+  vq_loss_weight: 1.0
+  print_freq: 20
+  val_freq: 1000
+  save_checkpoint_freq: 2000
+  save_preview_freq: 1000
+
+path:
+  experiments_root: experiments/residual_vq_codebook_tuihua_rgb
