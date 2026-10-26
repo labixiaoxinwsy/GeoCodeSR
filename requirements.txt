@@ -1,0 +1,18 @@
+# Verified with Python 3.12.9, PyTorch 2.2.0+cu118, and CUDA 11.8.
+addict==2.4.0
+future==1.0.0
+lmdb==1.6.2
+matplotlib==3.10.1
+numpy==1.26.4
+opencv-python==4.11.0.86
+Pillow==11.1.0
+PyYAML==6.0.2
+requests==2.34.2
+rasterio==1.4.3
+scikit-image==0.25.2
+scipy==1.15.2
+tb-nightly==2.20.0a20250407
+torch==2.2.0+cu118
+torchvision==0.17.0+cu118
+tqdm==4.67.1
+yapf==0.43.0
